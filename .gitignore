@@ -1,0 +1,8 @@
+# Ignorar arquivos do PostgreSQL
+*.sql
+*.db
+pgdata/
+
+# Ignorar arquivos do ambiente virtual (se estiver usando)
+venv/
+__pycache__/
