@@ -28,6 +28,7 @@ def criar_personagem(nome, classe, raca, nivel=1):
     print(f'personagem {nome} criado com sucesso! ID: {personagem_id}')
     return personagem_id # permitir saber qual foi o ID gerado
 
+# Select tabela
 def listar_personagem():
     conexao = conectar()
     cursor = conexao.cursor()
@@ -38,3 +39,32 @@ def listar_personagem():
     cursor.close()
     conexao.close()
     return personagens
+
+# Atualizar Personagem
+def atualizar_personagem(personagem_id, novo_nome, nova_classe, nova_raca, novo_nivel, nova_experiencia):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    cursor.execute(""""
+        UPDATE personagem 
+        SET nome = %s, classe = %s, raca = %s, nivel = %s, experiencia = %s
+        WHERE id = %s;
+"""(novo_nome, nova_classe, nova_raca, novo_nivel, nova_experiencia))  
+
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+    print(f"Personagem de ID: {personagem_id} atualizado com sucesso!")
+
+# Deletar Personagem
+def deletar_personagem(personagem_id):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    cursor.execute("DELETE * FROM personagem WHERE id = %s", personagem_id)
+    conexao.commit()
+
+    conexao.close()
+    cursor.close()
+    
