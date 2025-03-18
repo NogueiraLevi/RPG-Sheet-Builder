@@ -45,26 +45,34 @@ def atualizar_personagem(personagem_id, novo_nome, nova_classe, nova_raca, novo_
     conexao = conectar()
     cursor = conexao.cursor()
 
-    cursor.execute(""""
-        UPDATE personagem 
+    cursor.execute("""
+        UPDATE personagem
         SET nome = %s, classe = %s, raca = %s, nivel = %s, experiencia = %s
-        WHERE id = %s;
-"""(novo_nome, nova_classe, nova_raca, novo_nivel, nova_experiencia))  
+        WHERE id = %s
+        RETURNING id;
+    """, (novo_nome, nova_classe, nova_raca, novo_nivel, nova_experiencia, personagem_id))
 
+    atualizado = cursor.fetchone()  # Verifica se o ID foi atualizado
     conexao.commit()
+
     cursor.close()
     conexao.close()
 
-    print(f"Personagem de ID: {personagem_id} atualizado com sucesso!")
+    if atualizado:
+        print(f"Personagem ID {personagem_id} atualizado com sucesso!")
+    else:
+        print(f"Erro: Nenhum personagem com ID {personagem_id} encontrado.")
+
 
 # Deletar Personagem
 def deletar_personagem(personagem_id):
     conexao = conectar()
     cursor = conexao.cursor()
 
-    cursor.execute("DELETE * FROM personagem WHERE id = %s", personagem_id)
+    cursor.execute("DELETE FROM personagem WHERE id = %s", (personagem_id,))
     conexao.commit()
 
-    conexao.close()
     cursor.close()
+    conexao.close()
     
+    print(f"Personagem ID {personagem_id} deletado com sucesso!")
